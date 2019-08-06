@@ -23,13 +23,13 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 #else
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${entity}, ${idType}> implements ${table.serviceName} {
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${entity}, ${table.keyType}> implements ${table.serviceName} {
     private static Logger log = LoggerFactory.getLogger(${superServiceImplClass}.class);
 
     private ${table.mapperName} mapper;
 
     @Autowired
-    public InternshipAssignTrainerServiceImpl(${table.mapperName} mapper) {
+    public ${table.serviceImplName}(${table.mapperName} mapper) {
         super(mapper);
         this.mapper = mapper;
     }

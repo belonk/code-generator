@@ -77,7 +77,8 @@ public class ${entity} implements Serializable {
     @Column(value = "${field.name}")
     ## @Column(fill = FieldFill.${field.fill})
 #end
-#elseif(${field.convert})
+###elseif(${field.convert})
+#else
     @Column("${field.name}")
 #end
 ## 乐观锁注解

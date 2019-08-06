@@ -12,9 +12,9 @@ import ${superServiceClassPackage};
  * @since ${date}
  */
 #if(${kotlin})
-interface ${table.serviceName} : ${superServiceClass}<${entity}, ${idType}>
+interface ${table.serviceName} : ${superServiceClass}<${entity}, ${table.keyType}>
 #else
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}, ${table.keyType}> {
 
 }
 #end

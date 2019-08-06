@@ -57,6 +57,8 @@ public class TableInfo {
     private List<TableField> commonFields;
     private String fieldNames;
 
+    private String keyType;
+
     public TableInfo setConvert(boolean convert) {
         this.convert = convert;
         return this;

@@ -233,7 +233,11 @@ public class ConfigBuilder {
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
-        packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
+        if (config.isXmlSaveToResource()) {
+            packageInfo.put(ConstVal.XML, System.getProperty("user.dir") + StringPool.SLASH + "src/main/resources/" + config.getXmlResourceDir());
+        } else {
+            packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
+        }
         packageInfo.put(ConstVal.SERVICE, joinPackage(config.getParent(), config.getService()));
         packageInfo.put(ConstVal.SERVICE_IMPL, joinPackage(config.getParent(), config.getServiceImpl()));
         packageInfo.put(ConstVal.CONTROLLER, joinPackage(config.getParent(), config.getController()));
@@ -247,7 +251,11 @@ public class ConfigBuilder {
             pathInfo = new HashMap<>(6);
             setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
-            setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
+            if (config.isXmlSaveToResource()) {
+                pathInfo.put(ConstVal.XML_PATH, packageInfo.get(ConstVal.XML));
+            } else {
+                setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
+            }
             setPathInfo(pathInfo, template.getService(), outputDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
             setPathInfo(pathInfo, template.getServiceImpl(), outputDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
             setPathInfo(pathInfo, template.getController(), outputDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
@@ -542,6 +550,19 @@ public class ConfigBuilder {
                     // 处理其它信息
                     field.setName(columnName);
                     field.setType(results.getString(dbQuery.fieldType()));
+
+                    // 处理主键类型
+                    if (isId) {
+                        String pkType = field.getType();
+                        if (pkType.contains("varchar") || pkType.contains("char")) {
+                            tableInfo.setKeyType("String");
+                            tableInfo.getImportPackages().add(String.class.getCanonicalName());
+                        } else {
+                            tableInfo.setKeyType("Long");
+                            tableInfo.getImportPackages().add(Long.class.getCanonicalName());
+                        }
+                    }
+
                     INameConvert nameConvert = strategyConfig.getNameConvert();
                     if (null != nameConvert) {
                         field.setPropertyName(nameConvert.propertyNameConvert(field));

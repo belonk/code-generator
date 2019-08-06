@@ -71,6 +71,9 @@ public class PackageConfig {
      */
     private Map<String, String> pathInfo;
 
+    private boolean xmlSaveToResource = true;
+    private String xmlResourceDir = "mappers";
+
     /**
      * 父包名
      */
