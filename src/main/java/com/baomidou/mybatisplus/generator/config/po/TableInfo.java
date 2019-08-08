@@ -50,6 +50,7 @@ public class TableInfo {
     private String serviceName;
     private String serviceImplName;
     private String controllerName;
+    private String queryName;
     private List<TableField> fields;
     /**
      * 公共字段

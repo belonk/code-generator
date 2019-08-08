@@ -12,10 +12,13 @@ import org.springframework.stereotype.Controller;
 import ${superControllerClassPackage};
 #end
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+
 /**
- * <p>
  * $!{table.comment} 前端控制器
- * </p>
  *
  * @author ${author}
  * @since ${date}
@@ -26,16 +29,72 @@ import ${superControllerClassPackage};
 @Controller
 #end
 @RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
-#if(${kotlin})
-class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
-
-#else
 #if(${superControllerClass})
 public class ${table.controllerName} extends ${superControllerClass} {
 #else
 public class ${table.controllerName} {
 #end
+    /*
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *
+     * Static fields/constants/initializer
+     *
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     */
 
-}
+    private static Logger log = LoggerFactory.getLogger(${table.controllerName}.class);
 
+    /*
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *
+     * Instance fields
+     *
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     */
+
+    @Resource
+    private ${table.serviceName} ${table.entityPath}Service;
+
+    /*
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *
+     * Constructors
+     *
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     */
+
+
+
+    /*
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     *
+     * Methods
+     *
+     * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     */
+
+#if(!${restControllerStyle})
+    @RequestMapping("/index")
+    public String indexPage(Model model) {
+        return ${package.ModuleName}"/index";
+    }
 #end
+
+    @RequestMapping(value = "/detail/{id}")
+    public String projectDetail(@PathVariable("id") ${table.keyType} id, Model model) {
+        ${entity} bean = ${table.entityPath}Service.getOne(id);
+        // TODO 处理业务逻辑
+
+        model.addAttribute("bean", bean);
+        return ${package.ModuleName}"/detail";
+    }
+
+    @RequestMapping(value = "/page")
+    @ResponseBody
+    public Response pageQuery(${package.Query} query) {
+        DataTablePager<${entity}> pager = ${table.entityPath}Service.dataTablePageQuery(query);
+        // TODO 处理业务逻辑
+
+        return Response.success(pager);
+    }
+}

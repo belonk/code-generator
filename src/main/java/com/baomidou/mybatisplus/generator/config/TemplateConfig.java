@@ -43,7 +43,9 @@ public class TemplateConfig {
 
     private String controller = ConstVal.TEMPLATE_CONTROLLER;
 
-    public String getEntity(boolean kotlin) {
+    private String query = ConstVal.TEMPLATE_QUERY;
+
+    public String getEntity() {
         return entity;
     }
 }

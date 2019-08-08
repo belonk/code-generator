@@ -35,6 +35,7 @@ public interface ConstVal {
     String MAPPER = "Mapper";
     String XML = "Xml";
     String CONTROLLER = "Controller";
+    String QUERY = "Query";
 
     String ENTITY_PATH = "entity_path";
     String SERVICE_PATH = "service_path";
@@ -42,6 +43,7 @@ public interface ConstVal {
     String MAPPER_PATH = "mapper_path";
     String XML_PATH = "xml_path";
     String CONTROLLER_PATH = "controller_path";
+    String QUERY_PATH = "query_path";
 
     String JAVA_TMPDIR = "java.io.tmpdir";
     String UTF8 = StandardCharsets.UTF_8.name();
@@ -56,14 +58,20 @@ public interface ConstVal {
     String TEMPLATE_SERVICE = "/templates/service.java";
     String TEMPLATE_SERVICE_IMPL = "/templates/serviceImpl.java";
     String TEMPLATE_CONTROLLER = "/templates/controller.java";
+    String TEMPLATE_QUERY = "/templates/query.java";
 
     String VM_LOAD_PATH_KEY = "file.resource.loader.class";
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
 
     String SUPER_ENTITY_CLASS = "cn.bookingsmart.entity.BaseEntity";
-    String SUPER_CONTROLLER_CLASS = "cn.bookingsmart.web.BaseController";
+    // String SUPER_CONTROLLER_CLASS = "cn.bookingsmart.web.BaseController";
+    String SUPER_CONTROLLER_CLASS = "";
     String SUPER_MAPPER_CLASS = "cn.bookingsmart.dao.BaseMapper";
     String SUPER_SERVICE_CLASS = "cn.bookingsmart.service.BasePageableService";
-    String SUPER_SERVICE_IMPL_CLASS = "cn.bookingsmart.service.impl.BaseMybatisPageableServiceImpl";
+    String SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS = "cn.bookingsmart.service.impl.BaseMybatisPageableServiceImpl";
+    String SUPER_MYBATIS_SERVICE_IMPL_CLASS = "cn.bookingsmart.service.impl.BaseMybatisCrudServiceImpl";
+
+    String SUPER_DATATABLE_QUERY_CLASS = "cn.bookingsmart.query.datatable.DataTableQuery";
+    String SUPER_BASE_QUERY_CLASS = "cn.bookingsmart.query.BasePageQuery";
 
 }

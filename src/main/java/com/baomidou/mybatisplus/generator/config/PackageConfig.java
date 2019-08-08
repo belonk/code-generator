@@ -37,7 +37,7 @@ public class PackageConfig {
     /**
      * 父包名。如果为空，将下面子包名必须写全部， 否则就只需写子包名
      */
-    private String parent = "com.baomidou";
+    private String parent = "cn.bookingsmart";
     /**
      * 父包模块名
      */
@@ -67,11 +67,20 @@ public class PackageConfig {
      */
     private String controller = "controller";
     /**
+     * Query包名
+     */
+    private String query = "query";
+    /**
      * 路径配置信息
      */
     private Map<String, String> pathInfo;
-
+    /**
+     * xml文件保存到resources目录下
+     */
     private boolean xmlSaveToResource = true;
+    /**
+     * resources目录下存储xml的文件夹
+     */
     private String xmlResourceDir = "mappers";
 
     /**

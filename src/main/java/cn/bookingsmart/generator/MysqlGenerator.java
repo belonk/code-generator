@@ -1,5 +1,6 @@
 package cn.bookingsmart.generator;
 
+import cn.bookingsmart.annotation.GenerationType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -37,6 +38,9 @@ public class MysqlGenerator {
         gc.setOpen(false);
         // 自动生成BaseResultMap
         gc.setBaseResultMap(true);
+        gc.setIdType(GenerationType.INPUT);
+        // 测试用
+        gc.setFileOverride(true);
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -66,6 +70,7 @@ public class MysqlGenerator {
         // 表名前缀
         strategy.setTablePrefix("t_");
         strategy.setControllerMappingHyphenStyle(true);
+        // strategy.setRestControllerStyle(false);
         mpg.setStrategy(strategy);
 
         // 自定义配置

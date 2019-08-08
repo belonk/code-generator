@@ -3,13 +3,6 @@ package ${package.Entity};
 #foreach($pkg in ${table.importPackages})
 import ${pkg};
 #end
-#if(${superEntityClass})
-import cn.bookingsmart.entity.ID;
-#end
-#if(${swagger2})
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-#end
 #if(${entityLombokModel})
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,30 +10,17 @@ import lombok.experimental.Accessors;
 #end
 
 /**
- * <p>
- * $!{table.comment}
- * </p>
  *
  * @author ${author}
  * @since ${date}
  */
 #if(${entityLombokModel})
 @Data
-#if(${superEntityClass})
-@EqualsAndHashCode(callSuper = true)
-#else
 @EqualsAndHashCode(callSuper = false)
-#end
-## @Accessors(chain = true)
-#end
-#if(${table.convert})
-@Table(name = "${table.name}")
-#end
-#if(${swagger2})
-@ApiModel(value="${entity}对象", description="$!{table.comment}")
+@Accessors(chain = true)
 #end
 #if(${superEntityClass})
-public class ${entity} extends ${superEntityClass}#if(${activeRecord})<${entity}>#end implements ID<${table.keyType}> {
+public class ${query} extends ${superQueryClass}{
 #elseif(${activeRecord})
 public class ${entity} extends Model<${entity}> {
 #else

@@ -18,6 +18,8 @@ package com.baomidou.mybatisplus.generator.config.builder;
 import cn.bookingsmart.annotation.GenerationType;
 import cn.bookingsmart.annotation.Id;
 import cn.bookingsmart.constant.DBType;
+import cn.bookingsmart.query.BasePageQuery;
+import cn.bookingsmart.query.datatable.DataTableQuery;
 import cn.bookingsmart.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -65,6 +67,7 @@ public class ConfigBuilder {
     private String superServiceClass;
     private String superServiceImplClass;
     private String superControllerClass;
+    private String superQueryClass;
     /**
      * 数据库表信息
      */
@@ -136,7 +139,8 @@ public class ConfigBuilder {
         } else {
             this.strategyConfig = strategyConfig;
         }
-        //SQLITE 数据库不支持注释获取
+
+        // SQLITE 数据库不支持注释获取
         commentSupported = true;
 
         handlerStrategy(this.strategyConfig);
@@ -183,16 +187,17 @@ public class ConfigBuilder {
         return superServiceClass;
     }
 
-
     public String getSuperServiceImplClass() {
         return superServiceImplClass;
     }
-
 
     public String getSuperControllerClass() {
         return superControllerClass;
     }
 
+    public String getSuperQueryClass() {
+        return superQueryClass;
+    }
 
     /**
      * 表信息
@@ -207,7 +212,6 @@ public class ConfigBuilder {
         this.tableInfoList = tableInfoList;
         return this;
     }
-
 
     /**
      * 模板路径配置信息
@@ -234,7 +238,7 @@ public class ConfigBuilder {
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
         if (config.isXmlSaveToResource()) {
-            packageInfo.put(ConstVal.XML, System.getProperty("user.dir") + StringPool.SLASH + "src/main/resources/" + config.getXmlResourceDir());
+            packageInfo.put(ConstVal.XML, System.getProperty("user.dir") + StringPool.SLASH + "src/main/resources/" + config.getXmlResourceDir() + StringPool.SLASH + config.getModuleName());
         } else {
             packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
         }
@@ -249,7 +253,7 @@ public class ConfigBuilder {
         } else {
             // 生成路径信息
             pathInfo = new HashMap<>(6);
-            setPathInfo(pathInfo, template.getEntity(getGlobalConfig().isKotlin()), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
+            setPathInfo(pathInfo, template.getEntity(), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
             setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
             if (config.isXmlSaveToResource()) {
                 pathInfo.put(ConstVal.XML_PATH, packageInfo.get(ConstVal.XML));
@@ -301,10 +305,10 @@ public class ConfigBuilder {
         } else {
             superServiceClass = config.getSuperServiceClass();
         }
-        if (StringUtils.isEmpty(config.getSuperServiceImplClass())) {
-            superServiceImplClass = ConstVal.SUPER_SERVICE_IMPL_CLASS;
+        if (globalConfig.isDatatablePaging() || globalConfig.isSlidePaging() || globalConfig.isBackendPaging()) {
+            superServiceImplClass = ConstVal.SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS;
         } else {
-            superServiceImplClass = config.getSuperServiceImplClass();
+            superServiceImplClass = ConstVal.SUPER_MYBATIS_SERVICE_IMPL_CLASS;
         }
         if (StringUtils.isEmpty(config.getSuperMapperClass())) {
             superMapperClass = ConstVal.SUPER_MAPPER_CLASS;
@@ -320,6 +324,17 @@ public class ConfigBuilder {
             superEntityClass = ConstVal.SUPER_ENTITY_CLASS;
         } else {
             superEntityClass = config.getSuperEntityClass();
+        }
+
+        // 父级查询对象定义
+        if (StringUtils.isEmpty(config.getSuperQueryClass())) {
+            if (this.globalConfig.isDatatablePaging()) {
+                superQueryClass = ConstVal.SUPER_DATATABLE_QUERY_CLASS;
+            } else {
+                superQueryClass = ConstVal.SUPER_BASE_QUERY_CLASS;
+            }
+        } else {
+            superQueryClass = config.getSuperQueryClass();
         }
     }
 
@@ -342,6 +357,11 @@ public class ConfigBuilder {
                 entityName = nameConvert.entityNameConvert(tableInfo);
             } else {
                 entityName = NamingStrategy.capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix));
+            }
+            if (StringUtils.isNotEmpty(globalConfig.getQueryName())) {
+                tableInfo.setQueryName(globalConfig.getQueryName());
+            } else {
+                tableInfo.setQueryName(entityName + ConstVal.QUERY);
             }
             if (StringUtils.isNotEmpty(globalConfig.getEntityName())) {
                 tableInfo.setConvert(true);
@@ -394,6 +414,12 @@ public class ConfigBuilder {
             // 指定需要 IdType 场景
             tableInfo.getImportPackages().add(GenerationType.class.getCanonicalName());
             tableInfo.getImportPackages().add(Id.class.getCanonicalName());
+        }
+        // 添加导入父级Query包
+        if (globalConfig.isDatatablePaging()) {
+            tableInfo.getImportPackages().add(DataTableQuery.class.getCanonicalName());
+        } else if (globalConfig.isBackendPaging() || globalConfig.isSlidePaging()) {
+            tableInfo.getImportPackages().add(BasePageQuery.class.getCanonicalName());
         }
     }
 
@@ -513,7 +539,6 @@ public class ConfigBuilder {
         String tableName = tableInfo.getName();
         try {
             String tableFieldsSql = dbQuery.tableFieldsSql();
-            Set<String> h2PkColumns = new HashSet<>();
             tableFieldsSql = String.format(tableFieldsSql, tableName);
             try (
                     PreparedStatement preparedStatement = connection.prepareStatement(tableFieldsSql);

@@ -74,6 +74,9 @@ public class StrategyConfig {
      */
     @Setter(AccessLevel.NONE)
     private String superEntityClass;
+
+    @Setter(AccessLevel.NONE)
+    private String superQueryClass;
     /**
      * 自定义基础的Entity类，公共字段
      */
@@ -90,7 +93,7 @@ public class StrategyConfig {
     /**
      * 自定义继承的ServiceImpl类全称，带包名
      */
-    private String superServiceImplClass = ConstVal.SUPER_SERVICE_IMPL_CLASS;
+    private String superServiceImplClass = ConstVal.SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS;
     /**
      * 自定义继承的Controller类全称，带包名
      */

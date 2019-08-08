@@ -89,7 +89,15 @@ public abstract class AbstractTemplateEngine {
                 if (null != entityName && null != pathInfo.get(ConstVal.ENTITY_PATH)) {
                     String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.ENTITY, entityFile)) {
-                        writer(objectMap, templateFilePath(template.getEntity(getConfigBuilder().getGlobalConfig().isKotlin())), entityFile);
+                        writer(objectMap, templateFilePath(template.getEntity()), entityFile);
+                    }
+                }
+                // Query.java
+                String queryName = tableInfo.getQueryName();
+                if (null != queryName && null != pathInfo.get(ConstVal.QUERY_PATH)) {
+                    String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
+                    if (isCreate(FileType.ENTITY, entityFile)) {
+                        writer(objectMap, templateFilePath(template.getEntity()), entityFile);
                     }
                 }
                 // MpMapper.java
@@ -206,7 +214,6 @@ public abstract class AbstractTemplateEngine {
         objectMap.put("author", globalConfig.getAuthor());
         objectMap.put("idType", globalConfig.getIdType() == null ? null : globalConfig.getIdType().toString());
         objectMap.put("logicDeleteFieldName", config.getStrategyConfig().getLogicDeleteFieldName());
-        objectMap.put("kotlin", globalConfig.isKotlin());
         objectMap.put("swagger2", globalConfig.isSwagger2());
         objectMap.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         objectMap.put("table", tableInfo);
@@ -228,6 +235,9 @@ public abstract class AbstractTemplateEngine {
         objectMap.put("superServiceImplClass", getSuperClassName(config.getSuperServiceImplClass()));
         objectMap.put("superControllerClassPackage", config.getSuperControllerClass());
         objectMap.put("superControllerClass", getSuperClassName(config.getSuperControllerClass()));
+
+        objectMap.put("superQueryClass", getSuperClassName(config.getSuperControllerClass()));
+
         return Objects.isNull(config.getInjectionConfig()) ? objectMap : config.getInjectionConfig().prepareObjectMap(objectMap);
     }
 

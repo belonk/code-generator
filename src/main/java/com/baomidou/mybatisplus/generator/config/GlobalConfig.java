@@ -56,11 +56,6 @@ public class GlobalConfig {
     private String author;
 
     /**
-     * 开启 Kotlin 模式
-     */
-    private boolean kotlin = false;
-
-    /**
      * 开启 swagger2 模式
      */
     private boolean swagger2 = false;
@@ -89,8 +84,22 @@ public class GlobalConfig {
     private String serviceName;
     private String serviceImplName;
     private String controllerName;
+    private String queryName;
     /**
      * 指定生成的主键的ID类型
      */
     private GenerationType idType;
+
+    /**
+     * 后台 Datatable 分页
+     */
+    private boolean datatablePaging = false;
+    /**
+     * 前端滑动分页
+     */
+    private boolean slidePaging = false;
+    /**
+     * 后台分页
+     */
+    private boolean backendPaging = true;
 }
