@@ -45,6 +45,10 @@ public class TemplateConfig {
 
     private String query = ConstVal.TEMPLATE_QUERY;
 
+    private String page = ConstVal.TEMPLATE_PAGE;
+
+    private String script = ConstVal.TEMPLATE_SCRIPT;
+
     public String getEntity() {
         return entity;
     }

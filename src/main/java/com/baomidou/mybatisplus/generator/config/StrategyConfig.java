@@ -19,6 +19,7 @@ import cn.bookingsmart.toolkit.ClassUtils;
 import cn.bookingsmart.toolkit.StringUtils;
 import cn.bookingsmart.toolkit.TableInfoHelper;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.config.rules.PaginationType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -156,6 +157,15 @@ public class StrategyConfig {
      * 逻辑删除属性名称
      */
     private String logicDeleteFieldName;
+
+    /**
+     * 是否分页
+     */
+    private boolean pagination = false;
+    /**
+     * 分页类型
+     */
+    private PaginationType paginationType = PaginationType.BACKEND;
 
     /**
      * 大写命名、字段符合大写字母数字下划线命名

@@ -23,10 +23,13 @@ package com.baomidou.mybatisplus.generator.config.rules;
  */
 public enum FileType {
     ENTITY,
+    QUERY,
     MAPPER,
     XML,
     SERVICE,
     SERVICE_IMPL,
     CONTROLLER,
+    PAGE,
+    SCRIPT,
     OTHER
 }

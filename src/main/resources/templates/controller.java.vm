@@ -1,8 +1,14 @@
 package ${package.Controller};
 
-
-import org.springframework.web.bind.annotation.RequestMapping;
-
+#if(${pagination})
+import cn.bookingsmart.page.Pager;
+#end
+import ${package.Query}.${table.queryName};
+import ${package.Entity}.${table.entityName};
+import ${package.Service}.${table.serviceName};
+import cn.bookingsmart.result.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 #if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
 #else
@@ -11,9 +17,10 @@ import org.springframework.stereotype.Controller;
 #if(${superControllerClassPackage})
 import ${superControllerClassPackage};
 #end
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 
@@ -73,28 +80,30 @@ public class ${table.controllerName} {
      * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
      */
 
-#if(!${restControllerStyle})
+    #if(!${restControllerStyle})
     @RequestMapping("/index")
     public String indexPage(Model model) {
-        return ${package.ModuleName}"/index";
+        return "${package.ModuleName}/${table.entityPath}";
     }
-#end
 
     @RequestMapping(value = "/detail/{id}")
     public String projectDetail(@PathVariable("id") ${table.keyType} id, Model model) {
-        ${entity} bean = ${table.entityPath}Service.getOne(id);
+    ${entity} bean = ${table.entityPath}Service.getOne(id);
         // TODO 处理业务逻辑
 
         model.addAttribute("bean", bean);
-        return ${package.ModuleName}"/detail";
+        return "${package.ModuleName}/${table.entityPath}_detail";
     }
+    #end
 
+    #if (${pagination})
     @RequestMapping(value = "/page")
     @ResponseBody
-    public Response pageQuery(${package.Query} query) {
-        DataTablePager<${entity}> pager = ${table.entityPath}Service.dataTablePageQuery(query);
+    public Response pageQuery(${table.queryName} query) {
+        Pager<${entity}> pager = ${table.entityPath}Service.dataTablePageQuery(query);
         // TODO 处理业务逻辑
 
         return Response.success(pager);
     }
+    #end
 }

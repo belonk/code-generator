@@ -18,13 +18,11 @@ package com.baomidou.mybatisplus.generator.engine;
 import cn.bookingsmart.toolkit.PackageHelper;
 import cn.bookingsmart.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.ConstVal;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.FileType;
+import com.baomidou.mybatisplus.generator.config.rules.PaginationType;
 import com.belonk.commons.util.string.StringPool;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -95,9 +93,9 @@ public abstract class AbstractTemplateEngine {
                 // Query.java
                 String queryName = tableInfo.getQueryName();
                 if (null != queryName && null != pathInfo.get(ConstVal.QUERY_PATH)) {
-                    String entityFile = String.format((pathInfo.get(ConstVal.ENTITY_PATH) + File.separator + "%s" + suffixJavaOrKt()), entityName);
-                    if (isCreate(FileType.ENTITY, entityFile)) {
-                        writer(objectMap, templateFilePath(template.getEntity()), entityFile);
+                    String queryFile = String.format((pathInfo.get(ConstVal.QUERY_PATH) + File.separator + "%s" + suffixJavaOrKt()), queryName);
+                    if (isCreate(FileType.QUERY, queryFile)) {
+                        writer(objectMap, templateFilePath(template.getQuery()), queryFile);
                     }
                 }
                 // MpMapper.java
@@ -133,6 +131,22 @@ public abstract class AbstractTemplateEngine {
                     String controllerFile = String.format((pathInfo.get(ConstVal.CONTROLLER_PATH) + File.separator + tableInfo.getControllerName() + suffixJavaOrKt()), entityName);
                     if (isCreate(FileType.CONTROLLER, controllerFile)) {
                         writer(objectMap, templateFilePath(template.getController()), controllerFile);
+                    }
+                }
+
+                // 生成页面和脚本，RestController、前端滑动分页则不生成
+                if (!configBuilder.getStrategyConfig().isRestControllerStyle()) {
+                    StrategyConfig strategyConfig = getConfigBuilder().getStrategyConfig();
+                    if (strategyConfig.isPagination() && strategyConfig.getPaginationType() != PaginationType.SLIDE) {
+                        String pageFile = String.format((pathInfo.get(ConstVal.PAGE_PATH) + File.separator + tableInfo.getEntityPath() + pageSuffix()), tableInfo.getEntityPath());
+                        if (isCreate(FileType.PAGE, pageFile)) {
+                            writer(objectMap, templateFilePath(template.getPage()), pageFile);
+                        }
+
+                        String scriptFile = String.format((pathInfo.get(ConstVal.SCRIPT_PATH) + File.separator + tableInfo.getEntityPath() + scriptSuffix()), tableInfo.getEntityPath());
+                        if (isCreate(FileType.SCRIPT, pageFile)) {
+                            writer(objectMap, templateFilePath(template.getScript()), scriptFile);
+                        }
                     }
                 }
             }
@@ -234,9 +248,11 @@ public abstract class AbstractTemplateEngine {
         objectMap.put("superServiceImplClassPackage", config.getSuperServiceImplClass());
         objectMap.put("superServiceImplClass", getSuperClassName(config.getSuperServiceImplClass()));
         objectMap.put("superControllerClassPackage", config.getSuperControllerClass());
-        objectMap.put("superControllerClass", getSuperClassName(config.getSuperControllerClass()));
 
-        objectMap.put("superQueryClass", getSuperClassName(config.getSuperControllerClass()));
+        objectMap.put("superQueryClass", getSuperClassName(config.getSuperQueryClass()));
+        objectMap.put("superQueryClassPackage", config.getSuperQueryClass());
+        objectMap.put("pageTitle", config.getGlobalConfig().getPageTitle());
+        objectMap.put("pagination", config.getStrategyConfig().isPagination());
 
         return Objects.isNull(config.getInjectionConfig()) ? objectMap : config.getInjectionConfig().prepareObjectMap(objectMap);
     }
@@ -293,6 +309,13 @@ public abstract class AbstractTemplateEngine {
         return ConstVal.JAVA_SUFFIX;
     }
 
+    protected String pageSuffix() {
+        return ConstVal.PAGE_SUFFIX;
+    }
+
+    protected String scriptSuffix() {
+        return ConstVal.SCRIPT_SUFFIX;
+    }
 
     public ConfigBuilder getConfigBuilder() {
         return configBuilder;

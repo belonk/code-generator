@@ -26,6 +26,7 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableField;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.config.rules.PaginationType;
 import com.belonk.commons.util.string.StringPool;
 
 import java.io.File;
@@ -236,9 +237,10 @@ public class ConfigBuilder {
         packageInfo = new HashMap<>(8);
         packageInfo.put(ConstVal.MODULE_NAME, config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
+        packageInfo.put(ConstVal.QUERY, joinPackage(config.getParent(), config.getQuery()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
         if (config.isXmlSaveToResource()) {
-            packageInfo.put(ConstVal.XML, System.getProperty("user.dir") + StringPool.SLASH + "src/main/resources/" + config.getXmlResourceDir() + StringPool.SLASH + config.getModuleName());
+            packageInfo.put(ConstVal.XML, outputDir + StringPool.SLASH + "src/main/resources/" + config.getXmlResourceDir() + StringPool.SLASH + config.getModuleName());
         } else {
             packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
         }
@@ -246,6 +248,12 @@ public class ConfigBuilder {
         packageInfo.put(ConstVal.SERVICE_IMPL, joinPackage(config.getParent(), config.getServiceImpl()));
         packageInfo.put(ConstVal.CONTROLLER, joinPackage(config.getParent(), config.getController()));
 
+        String scriptPath = globalConfig.getScriptPath();
+        String pagePath = globalConfig.getPagePath();
+        packageInfo.put(ConstVal.PAGE, outputDir + StringPool.SLASH + pagePath + StringPool.SLASH + config.getModuleName());
+        packageInfo.put(ConstVal.SCRIPT, outputDir + StringPool.SLASH + scriptPath + StringPool.SLASH + config.getModuleName());
+
+        String javaPath = globalConfig.getJavaPath();
         // 自定义路径
         Map<String, String> configPathInfo = config.getPathInfo();
         if (null != configPathInfo) {
@@ -253,16 +261,20 @@ public class ConfigBuilder {
         } else {
             // 生成路径信息
             pathInfo = new HashMap<>(6);
-            setPathInfo(pathInfo, template.getEntity(), outputDir, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
-            setPathInfo(pathInfo, template.getMapper(), outputDir, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
+            setPathInfo(pathInfo, template.getEntity(), outputDir + StringPool.SLASH + javaPath, ConstVal.ENTITY_PATH, ConstVal.ENTITY);
+            setPathInfo(pathInfo, template.getQuery(), outputDir + StringPool.SLASH + javaPath, ConstVal.QUERY_PATH, ConstVal.QUERY);
+            setPathInfo(pathInfo, template.getMapper(), outputDir + StringPool.SLASH + javaPath, ConstVal.MAPPER_PATH, ConstVal.MAPPER);
             if (config.isXmlSaveToResource()) {
                 pathInfo.put(ConstVal.XML_PATH, packageInfo.get(ConstVal.XML));
             } else {
-                setPathInfo(pathInfo, template.getXml(), outputDir, ConstVal.XML_PATH, ConstVal.XML);
+                setPathInfo(pathInfo, template.getXml(), outputDir + StringPool.SLASH + javaPath, ConstVal.XML_PATH, ConstVal.XML);
             }
-            setPathInfo(pathInfo, template.getService(), outputDir, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
-            setPathInfo(pathInfo, template.getServiceImpl(), outputDir, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
-            setPathInfo(pathInfo, template.getController(), outputDir, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+            setPathInfo(pathInfo, template.getService(), outputDir + StringPool.SLASH + javaPath, ConstVal.SERVICE_PATH, ConstVal.SERVICE);
+            setPathInfo(pathInfo, template.getServiceImpl(), outputDir + StringPool.SLASH + javaPath, ConstVal.SERVICE_IMPL_PATH, ConstVal.SERVICE_IMPL);
+            setPathInfo(pathInfo, template.getController(), outputDir + StringPool.SLASH + javaPath, ConstVal.CONTROLLER_PATH, ConstVal.CONTROLLER);
+            // 页面
+            pathInfo.put(ConstVal.PAGE_PATH, packageInfo.get(ConstVal.PAGE));
+            pathInfo.put(ConstVal.SCRIPT_PATH, packageInfo.get(ConstVal.SCRIPT));
         }
     }
 
@@ -305,7 +317,7 @@ public class ConfigBuilder {
         } else {
             superServiceClass = config.getSuperServiceClass();
         }
-        if (globalConfig.isDatatablePaging() || globalConfig.isSlidePaging() || globalConfig.isBackendPaging()) {
+        if (config.isPagination()) {
             superServiceImplClass = ConstVal.SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS;
         } else {
             superServiceImplClass = ConstVal.SUPER_MYBATIS_SERVICE_IMPL_CLASS;
@@ -328,7 +340,7 @@ public class ConfigBuilder {
 
         // 父级查询对象定义
         if (StringUtils.isEmpty(config.getSuperQueryClass())) {
-            if (this.globalConfig.isDatatablePaging()) {
+            if (config.getPaginationType() == PaginationType.DATATABLE) {
                 superQueryClass = ConstVal.SUPER_DATATABLE_QUERY_CLASS;
             } else {
                 superQueryClass = ConstVal.SUPER_BASE_QUERY_CLASS;
@@ -416,9 +428,9 @@ public class ConfigBuilder {
             tableInfo.getImportPackages().add(Id.class.getCanonicalName());
         }
         // 添加导入父级Query包
-        if (globalConfig.isDatatablePaging()) {
+        if (strategyConfig.getPaginationType() == PaginationType.DATATABLE) {
             tableInfo.getImportPackages().add(DataTableQuery.class.getCanonicalName());
-        } else if (globalConfig.isBackendPaging() || globalConfig.isSlidePaging()) {
+        } else {
             tableInfo.getImportPackages().add(BasePageQuery.class.getCanonicalName());
         }
     }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.config.rules.PaginationType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,8 @@ public class MysqlGenerator {
      * RUN THIS
      */
     public static void main(String[] args) {
-        String modelName = "user";
-        String tableName = "t_user";
+        String modelName = "permission";
+        String tableName = "";
         String author = "belonk";
 
         // 代码生成器
@@ -33,7 +34,7 @@ public class MysqlGenerator {
 
         GlobalConfig gc = new GlobalConfig();
         final String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setOutputDir(projectPath);
         gc.setAuthor(author);
         gc.setOpen(false);
         // 自动生成BaseResultMap
@@ -41,6 +42,10 @@ public class MysqlGenerator {
         gc.setIdType(GenerationType.INPUT);
         // 测试用
         gc.setFileOverride(true);
+        // 页面设置
+        gc.setPageTitle("用户管理");
+        // gc.setScriptPath("src/main/webapp/assets/js")
+        // gc.setPagePath("src/main/webapp/pages");
         mpg.setGlobalConfig(gc);
 
         // 数据源配置
@@ -63,14 +68,19 @@ public class MysqlGenerator {
         // 策略配置
 
         StrategyConfig strategy = new StrategyConfig();
+        // strategy.setRestControllerStyle(false);
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setInclude(tableName);
+        // strategy.setInclude(tableName);
         strategy.setEntityLombokModel(true);
+        // 分页
+        strategy.setPagination(true);
+        strategy.setPaginationType(PaginationType.DATATABLE);
         // 表名前缀
         strategy.setTablePrefix("t_");
         strategy.setControllerMappingHyphenStyle(true);
         // strategy.setRestControllerStyle(false);
+        // strategy.setExclude("t_user");
         mpg.setStrategy(strategy);
 
         // 自定义配置

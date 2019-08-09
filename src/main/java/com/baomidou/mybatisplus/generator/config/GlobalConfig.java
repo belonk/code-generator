@@ -89,17 +89,14 @@ public class GlobalConfig {
      * 指定生成的主键的ID类型
      */
     private GenerationType idType;
-
     /**
-     * 后台 Datatable 分页
+     * 页面标题
      */
-    private boolean datatablePaging = false;
+    private String pageTitle;
     /**
-     * 前端滑动分页
+     *
      */
-    private boolean slidePaging = false;
-    /**
-     * 后台分页
-     */
-    private boolean backendPaging = true;
+    private String scriptPath = "src/main/webapp/assets/js";
+    private String pagePath = "src/main/webapp/pages";
+    private String javaPath = "src/main/java";
 }

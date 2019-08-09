@@ -1,0 +1,117 @@
+/**
+ * Created by ${author} on ${date}.
+ */
+$(function () {
+    /**
+     * ${entity}管理对象。
+     *
+     * @constructor
+     * @author ${author}
+     * @since ${date}
+     */
+    function ${entity}Manager() {
+        // 表格ID
+        this.dataTable = $("#dataTable");
+        // 按钮
+        // TODO 添加其他操作按钮
+        
+        this.seachr_btn = $('#btn_search');
+        this.btn_search_clear = $('#btn_search_clear');
+
+        // 初始化
+        this.init();
+    }
+
+    ${entity}Manager.prototype.Constructor = ${entity}Manager;
+
+    ${entity}Manager.prototype.init = function () {
+        this.loadTable();
+        this.registEvent();
+    };
+
+    ${entity}Manager.prototype.loadTable = function () {
+        this.dataTable.dataTable({
+            "sAjaxSource": app_path + "/#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end/page",
+            "aoColumns": [
+                {
+                    "sWidth": "4%",
+                    "sTitle": "<input type=\"checkbox\" class=\"ace\" /><span class=\"lbl\"></span>",
+                    "sClass": "center",
+                    "mData": "id",
+                    "bSortable": false
+                },
+                // TODO 添加需要展示的列
+                // {"sWidth": "8%", "sTitle": "模块名称", "sClass": "center", "mData": "moduleName", "bSortable": false},
+
+
+                {"sWidth": "6%", "sTitle": "操作", "sClass": "center", "mData": "id", "bSortable": false}
+            ],
+            "aLengthMenu": [10, 30, 50],
+            "aaSorting": [],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                var id = aData["id"];
+                var inputHtml = "<input type='checkbox' class='ace' name='teacherId' value='" + id + "'/><span class=\"lbl\"></span>";
+                $('td:eq(0)', nRow).html(inputHtml);
+
+                // TODO 处理其他展示逻辑
+
+
+                // TODO 添加操作代码
+                // var option = '<a title="删除当前日志" href="javascript:void(0)" class="btn btn-xs btn-danger">删除</a>';
+                // $('td:eq(8)', nRow).html(option);
+
+
+            },
+            "fnServerParams": function (aoData) {
+                queryCondition("#search-form", aoData);
+            },
+            "fnStateLoaded": function (oSettings, oData) {
+                // alert(JSON.stringify(oData));
+            }
+        });
+
+        function queryCondition(queryFormId, aoData) {
+            var queryParameters = $(queryFormId).serializeArray();
+            $(queryParameters).each(function (i, v) {
+                aoData.push(v);
+            });
+        }
+    };
+
+    ${entity}Manager.prototype.refreshTable = function () {
+        this.dataTable.dataTable().fnClearTable();
+    };
+
+    ${entity}Manager.prototype.registEvent = function () {
+        var that = this;
+
+        // TODO 添加按钮操作业务逻辑
+        // this.dataTable.on('click', 'a.btn-danger', function () { /* TODO 这里添加事件处理逻辑*/ });
+
+
+        // TODO 添加其他注册事件
+        // this.delete_btn.on('click', function () {/* 这里添加事件处理逻辑 */});
+
+        that.seachr_btn.click(function () {
+            var oSettings = that.dataTable.dataTable().fnSettings();
+            oSettings._iDisplayStart = 0;
+            that.dataTable.dataTable().fnClearTable();
+        });
+
+        that.btn_search_clear.click(function () {
+            // TODO 添加条件清除按钮需要清除的数据逻辑
+            // $('#moduleName').val('');
+
+
+            that.seachr_btn.click();
+        });
+
+        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
+            //$(this).prev().focus();
+        });
+
+        SysTool.Html.bindEnterClick([], that.\$seachr_btn);
+    };
+
+    window.${entity}Manager = new ${entity}Manager();
+});

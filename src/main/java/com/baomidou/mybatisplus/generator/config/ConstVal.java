@@ -36,6 +36,8 @@ public interface ConstVal {
     String XML = "Xml";
     String CONTROLLER = "Controller";
     String QUERY = "Query";
+    String PAGE = "Page";
+    String SCRIPT = "Script";
 
     String ENTITY_PATH = "entity_path";
     String SERVICE_PATH = "service_path";
@@ -44,11 +46,15 @@ public interface ConstVal {
     String XML_PATH = "xml_path";
     String CONTROLLER_PATH = "controller_path";
     String QUERY_PATH = "query_path";
+    String PAGE_PATH = "page_path";
+    String SCRIPT_PATH = "script_path";
 
     String JAVA_TMPDIR = "java.io.tmpdir";
     String UTF8 = StandardCharsets.UTF_8.name();
     String UNDERLINE = "_";
 
+    String PAGE_SUFFIX = ".jsp";
+    String SCRIPT_SUFFIX = ".js";
     String JAVA_SUFFIX = StringPool.DOT_JAVA;
     String XML_SUFFIX = ".xml";
 
@@ -59,6 +65,8 @@ public interface ConstVal {
     String TEMPLATE_SERVICE_IMPL = "/templates/serviceImpl.java";
     String TEMPLATE_CONTROLLER = "/templates/controller.java";
     String TEMPLATE_QUERY = "/templates/query.java";
+    String TEMPLATE_PAGE = "/templates/view.jsp";
+    String TEMPLATE_SCRIPT = "/templates/view.js";
 
     String VM_LOAD_PATH_KEY = "file.resource.loader.class";
     String VM_LOAD_PATH_VALUE = "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader";
