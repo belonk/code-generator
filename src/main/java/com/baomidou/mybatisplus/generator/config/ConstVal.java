@@ -75,7 +75,8 @@ public interface ConstVal {
     // String SUPER_CONTROLLER_CLASS = "cn.bookingsmart.web.BaseController";
     String SUPER_CONTROLLER_CLASS = "";
     String SUPER_MAPPER_CLASS = "cn.bookingsmart.dao.BaseMapper";
-    String SUPER_SERVICE_CLASS = "cn.bookingsmart.service.BasePageableService";
+    String SUPER_SERVICE_CLASS = "cn.bookingsmart.service.MybatisBaseService";
+    String SUPER_PAGE_SERVICE_CLASS = "cn.bookingsmart.service.BasePageableService";
     String SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS = "cn.bookingsmart.service.impl.BaseMybatisPageableServiceImpl";
     String SUPER_MYBATIS_SERVICE_IMPL_CLASS = "cn.bookingsmart.service.impl.BaseMybatisCrudServiceImpl";
 

@@ -251,7 +251,7 @@ public abstract class AbstractTemplateEngine {
 
         objectMap.put("superQueryClass", getSuperClassName(config.getSuperQueryClass()));
         objectMap.put("superQueryClassPackage", config.getSuperQueryClass());
-        objectMap.put("pageTitle", config.getGlobalConfig().getPageTitle());
+        // objectMap.put("pageTitle", "");
         objectMap.put("pagination", config.getStrategyConfig().isPagination());
 
         return Objects.isNull(config.getInjectionConfig()) ? objectMap : config.getInjectionConfig().prepareObjectMap(objectMap);

@@ -17,7 +17,9 @@ package com.baomidou.mybatisplus.generator.config;
 
 import cn.bookingsmart.annotation.GenerationType;
 import com.baomidou.mybatisplus.generator.config.rules.DateType;
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 /**
@@ -31,19 +33,22 @@ import lombok.experimental.Accessors;
 public class GlobalConfig {
 
     /**
-     * 生成文件的输出目录【默认 D 盘根目录】
+     * 生成文件的输出目录【默认为调用根目录】
      */
-    private String outputDir = "D://";
+    private String outputDir = System.getProperty("user.dir");
 
     /**
      * 是否覆盖已有文件
+     * <p>
+     * 暂不开放，避免覆盖文件
      */
+    @Setter(value = AccessLevel.PRIVATE)
     private boolean fileOverride = false;
 
     /**
      * 是否打开输出目录
      */
-    private boolean open = true;
+    private boolean open = false;
 
     /**
      * 是否在xml中添加二级缓存配置
@@ -63,7 +68,7 @@ public class GlobalConfig {
     /**
      * 开启 BaseResultMap
      */
-    private boolean baseResultMap = false;
+    private boolean baseResultMap = true;
 
     /**
      * 时间类型对应策略
@@ -89,10 +94,6 @@ public class GlobalConfig {
      * 指定生成的主键的ID类型
      */
     private GenerationType idType;
-    /**
-     * 页面标题
-     */
-    private String pageTitle;
     /**
      *
      */

@@ -158,7 +158,6 @@ public class ConfigBuilder {
         return packageInfo;
     }
 
-
     /**
      * 所有路径配置
      *
@@ -168,16 +167,13 @@ public class ConfigBuilder {
         return pathInfo;
     }
 
-
     public String getSuperEntityClass() {
         return superEntityClass;
     }
 
-
     public String getSuperMapperClass() {
         return superMapperClass;
     }
-
 
     /**
      * 获取超类定义
@@ -305,7 +301,6 @@ public class ConfigBuilder {
         tableInfoList = getTablesInfo(config);
     }
 
-
     /**
      * 处理superClassName,IdClassType,IdStrategy配置
      *
@@ -319,7 +314,9 @@ public class ConfigBuilder {
         }
         if (config.isPagination()) {
             superServiceImplClass = ConstVal.SUPER_MYBATIS_PAGE_SERVICE_IMPL_CLASS;
+            superServiceClass = ConstVal.SUPER_PAGE_SERVICE_CLASS;
         } else {
+            superServiceClass = ConstVal.SUPER_SERVICE_CLASS;
             superServiceImplClass = ConstVal.SUPER_MYBATIS_SERVICE_IMPL_CLASS;
         }
         if (StringUtils.isEmpty(config.getSuperMapperClass())) {
@@ -349,7 +346,6 @@ public class ConfigBuilder {
             superQueryClass = config.getSuperQueryClass();
         }
     }
-
 
     /**
      * 处理表对应的类名称
@@ -434,7 +430,6 @@ public class ConfigBuilder {
             tableInfo.getImportPackages().add(BasePageQuery.class.getCanonicalName());
         }
     }
-
 
     /**
      * 获取所有的数据库表信息
@@ -522,7 +517,6 @@ public class ConfigBuilder {
         }
         return processTable(includeTableList, config.getNaming(), config);
     }
-
 
     /**
      * 表名匹配

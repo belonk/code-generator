@@ -74,6 +74,7 @@ public class AutoGenerator {
      * 全局 相关配置
      */
     private GlobalConfig globalConfig;
+
     /**
      * 模板引擎
      */

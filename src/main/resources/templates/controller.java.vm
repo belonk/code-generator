@@ -98,7 +98,9 @@ public class ${table.controllerName} {
 
     #if (${pagination})
     @RequestMapping(value = "/page")
+    #if(!${restControllerStyle})
     @ResponseBody
+    #end
     public Response pageQuery(${table.queryName} query) {
         Pager<${entity}> pager = ${table.entityPath}Service.dataTablePageQuery(query);
         // TODO 处理业务逻辑
