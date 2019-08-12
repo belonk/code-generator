@@ -58,23 +58,24 @@ public class TableField {
     }
 
     protected TableField setConvert(StrategyConfig strategyConfig) {
-        if (strategyConfig.isEntityTableFieldAnnotationEnable()) {
-            this.convert = true;
-            return this;
-        }
-        if (strategyConfig.isCapitalModeNaming(name)) {
-            this.convert = false;
-        } else {
-            // 转换字段
-            if (NamingStrategy.underline_to_camel == strategyConfig.getColumnNaming()) {
-                // 包含大写处理
-                if (StringUtils.containsUpperCase(name)) {
-                    this.convert = true;
-                }
-            } else if (!name.equals(propertyName)) {
-                this.convert = true;
-            }
-        }
+        this.convert = true;
+        // if (strategyConfig.isEntityTableFieldAnnotationEnable()) {
+        //     this.convert = true;
+        //     return this;
+        // }
+        // if (strategyConfig.isCapitalModeNaming(name)) {
+        //     this.convert = false;
+        // } else {
+        //     // 转换字段
+        //     if (NamingStrategy.underline_to_camel == strategyConfig.getColumnNaming()) {
+        //         // 包含大写处理
+        //         if (StringUtils.containsUpperCase(name)) {
+        //             this.convert = true;
+        //         }
+        //     } else if (!name.equals(propertyName)) {
+        //         this.convert = true;
+        //     }
+        // }
         return this;
     }
 

@@ -50,14 +50,15 @@ public class MyCodeGenerator {
      */
 
     public static void main(String[] args) {
-        String modelName = "permission";
-        String[] tableName = new String[]{"t_user", "dept" };
-        String author = "belonk";
-        String dbUrl = "localhost:3306/test";
-        String dbUser = "root";
-        String dbPassword = "123";
+        String modelName = "permission" ;
+        String[] tableName = new String[]{"t_user", "t_dept"};
+        String[] tablePrefix = new String[]{"t_"};
+        String author = "belonk" ;
+        String dbUrl = "localhost:3306/test" ;
+        String dbUser = "root" ;
+        String dbPassword = "123" ;
         CodeGenerator.getInstance()
-                .init(modelName, tableName, author)
+                .init(modelName, tableName, tablePrefix, author)
                 .dbParams(dbUrl, dbUser, dbPassword)
                 .otherParams(false, true, PaginationType.DATATABLE)
                 .generate();

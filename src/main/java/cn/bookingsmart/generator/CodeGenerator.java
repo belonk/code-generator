@@ -20,6 +20,7 @@ import java.util.List;
 public class CodeGenerator {
     private String modelName;
     private String[] tableName;
+    private String[] tablePrefix;
     private String author;
     private String dbUrl;
     private String dbUser;
@@ -78,10 +79,11 @@ public class CodeGenerator {
         generator.execute();
     }
 
-    public CodeGenerator init(String modelName, String[] tableName, String author) {
+    public CodeGenerator init(String modelName, String[] tableName, String[] tablePrefix, String author) {
         this.modelName = modelName;
         this.tableName = tableName;
         this.author = author;
+        this.tablePrefix = tablePrefix;
         return this;
     }
 
@@ -134,14 +136,13 @@ public class CodeGenerator {
         sc.setNaming(NamingStrategy.underline_to_camel);
         sc.setColumnNaming(NamingStrategy.underline_to_camel);
         sc.setInclude(tableName);
+        sc.setTablePrefix(tablePrefix);
         sc.setEntityLombokModel(true);
         // 分页
         sc.setPagination(pagination);
         if (pagination) {
             sc.setPaginationType(paginationType);
         }
-        // 表名前缀
-        sc.setTablePrefix("t_");
         sc.setControllerMappingHyphenStyle(true);
         sc.setRestControllerStyle(restController);
         generator.setStrategy(sc);
