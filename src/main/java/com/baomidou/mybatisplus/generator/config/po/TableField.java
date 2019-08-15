@@ -19,10 +19,10 @@ import cn.bookingsmart.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
 import com.baomidou.mybatisplus.generator.config.rules.IColumnType;
-import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.sql.JDBCType;
 import java.util.Map;
 
 /**
@@ -51,6 +51,7 @@ public class TableField {
      * 自定义查询字段列表
      */
     private Map<String, Object> customMap;
+    private JDBCType jdbcType;
 
     public TableField setConvert(boolean convert) {
         this.convert = convert;

@@ -18,6 +18,7 @@ package com.baomidou.mybatisplus.generator.config.builder;
 import cn.bookingsmart.annotation.GenerationType;
 import cn.bookingsmart.annotation.Id;
 import cn.bookingsmart.constant.DBType;
+import cn.bookingsmart.exception.MybatisFrameworkException;
 import cn.bookingsmart.query.BasePageQuery;
 import cn.bookingsmart.query.datatable.DataTableQuery;
 import cn.bookingsmart.toolkit.StringUtils;
@@ -30,10 +31,7 @@ import com.baomidou.mybatisplus.generator.config.rules.PaginationType;
 import com.belonk.commons.util.string.StringPool;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -581,7 +579,7 @@ public class ConfigBuilder {
                     // 处理其它信息
                     field.setName(columnName);
                     field.setType(results.getString(dbQuery.fieldType()));
-
+                    field.setJdbcType(parseJdbcType(field.getType()));
                     // 处理主键类型
                     if (isId) {
                         String pkType = field.getType();
@@ -618,6 +616,78 @@ public class ConfigBuilder {
         tableInfo.setFields(fieldList);
         tableInfo.setCommonFields(commonFieldList);
         return tableInfo;
+    }
+
+    private JDBCType parseJdbcType(String type) {
+        JDBCType jdbcType = null;
+        if (type.startsWith("varchar")) {
+            jdbcType = JDBCType.VARCHAR;
+        } else if (type.startsWith("char")) {
+            jdbcType = JDBCType.CHAR;
+        } else if (type.startsWith("bigint")) {
+            jdbcType = JDBCType.BIGINT;
+        } else if (type.startsWith("int")) {
+            jdbcType = JDBCType.INTEGER;
+        } else if (type.startsWith("binary")) {
+            jdbcType = JDBCType.BINARY;
+        } else if (type.startsWith("bit")) {
+            jdbcType = JDBCType.BIT;
+        } else if (type.startsWith("blob")) {
+            jdbcType = JDBCType.BLOB;
+        } else if (type.startsWith("datetime")) {
+            jdbcType = JDBCType.TIMESTAMP;
+        } else if (type.startsWith("date")) {
+            jdbcType = JDBCType.DATE;
+        } else if (type.startsWith("decimal")) {
+            jdbcType = JDBCType.DECIMAL;
+        } else if (type.startsWith("double")) {
+            jdbcType = JDBCType.DOUBLE;
+        } else if (type.startsWith("float")) {
+            jdbcType = JDBCType.FLOAT;
+            // } else if (type.startsWith("num")) {
+            // } else if (type.startsWith("json")) {
+            // } else if (type.startsWith("linestring")) {
+            // } else if (type.startsWith("mediumblob")) {
+            // } else if (type.startsWith("mediumblob")) {
+            // } else if (type.startsWith("mediumtext")) {
+            // } else if (type.startsWith("multilinestring")) {
+            // } else if (type.startsWith("multipoint")) {
+            // } else if (type.startsWith("multipolygon")) {
+            // } else if (type.startsWith("numeric")) {
+            // } else if (type.startsWith("numeric")) {
+            // } else if (type.startsWith("point")) {
+            // } else if (type.startsWith("polygon")) {
+            // } else if (type.startsWith("real")) {
+            // } else if (type.startsWith("set")) {
+            // } else if (type.startsWith("year")) {
+        } else if (type.startsWith("varbinary")) {
+            jdbcType = JDBCType.VARBINARY;
+        } else if (type.startsWith("tinytext")) {
+            jdbcType = JDBCType.VARCHAR;
+        } else if (type.startsWith("tinyint")) {
+            jdbcType = JDBCType.TINYINT;
+        } else if (type.startsWith("tinyblob")) {
+            jdbcType = JDBCType.BLOB;
+        } else if (type.startsWith("timestamp")) {
+            jdbcType = JDBCType.TIMESTAMP;
+        } else if (type.startsWith("time")) {
+            jdbcType = JDBCType.TIME;
+        } else if (type.startsWith("text")) {
+            jdbcType = JDBCType.LONGVARCHAR;
+        } else if (type.startsWith("smallint")) {
+            jdbcType = JDBCType.SMALLINT;
+        } else if (type.startsWith("longtext")) {
+            jdbcType = JDBCType.LONGNVARCHAR;
+        } else if (type.startsWith("longblob")) {
+            jdbcType = JDBCType.BLOB;
+        } else if (type.startsWith("mediumint")) {
+            jdbcType = JDBCType.INTEGER;
+        } else if (type.startsWith("binary")) {
+            jdbcType = JDBCType.BINARY;
+        } else {
+            throw new MybatisFrameworkException("Unsupported database type : " + type);
+        }
+        return jdbcType;
     }
 
     /**
